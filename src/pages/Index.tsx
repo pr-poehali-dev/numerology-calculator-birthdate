@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { calculate, getArcane, ARCANES, type NumerologyResult } from "@/data/numerology";
-import { getCitiesForNumber, filterCities, getCompatibilityScore, getCompatibilityLabel, type Climate, type Lifestyle, type Region, type Cost } from "@/data/cities";
+import { getCitiesForNumber, filterCities, getCompatibilityScore, getCompatibilityLabel, type Climate, type Lifestyle, type Region, type Cost, CITIES } from "@/data/cities";
 
 type Section = "calculator" | "arcanes" | "analysis" | "results" | "method" | "cities";
 
@@ -228,13 +228,99 @@ export default function Index() {
                   </div>
                 )}
 
+                {/* Идеальный город */}
+                {(() => {
+                  const ideal = CITIES.find(c => c.number === result.lifePathNumber)
+                    ?? getCitiesForNumber(result.lifePathNumber)[0];
+                  if (!ideal) return null;
+                  const score = getCompatibilityScore(ideal.number, result.lifePathNumber);
+                  return (
+                    <div
+                      className="mystic-card rounded-2xl overflow-hidden mt-6 cursor-pointer"
+                      style={{ borderColor: "hsla(45,80%,45%,0.6)", boxShadow: "0 0 40px hsla(45,80%,25%,0.25)" }}
+                      onClick={() => setActiveSection("cities")}
+                    >
+                      {/* Заголовок полосы */}
+                      <div className="px-6 pt-5 pb-3 flex items-center justify-between"
+                        style={{ borderBottom: "1px solid hsla(45,50%,25%,0.3)" }}>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🌍</span>
+                          <span className="text-xs uppercase tracking-[0.25em]" style={{ color: "hsl(45,50%,50%)" }}>
+                            Идеальный город для переезда
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="arcane-number text-lg">{score}%</span>
+                          <span className="text-xs" style={{ color: "hsl(45,50%,45%)" }}>совместимость</span>
+                        </div>
+                      </div>
+
+                      {/* Тело карточки */}
+                      <div className="p-6">
+                        <div className="flex items-start gap-5">
+                          <div className="text-5xl flex-shrink-0 leading-none mt-1">{ideal.flag}</div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-baseline gap-3 mb-1 flex-wrap">
+                              <h3 className="font-cormorant text-4xl font-light gold-text leading-none">{ideal.name}</h3>
+                              <span className="text-sm" style={{ color: "hsl(45,30%,50%)" }}>{ideal.country}</span>
+                            </div>
+                            <p className="text-xs mb-3" style={{ color: "hsl(45,50%,55%)" }}>{ideal.energy}</p>
+
+                            {/* Полоса совместимости */}
+                            <div className="h-0.5 rounded-full overflow-hidden mb-4" style={{ background: "hsla(45,30%,15%,0.8)" }}>
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${score}%`,
+                                  background: "linear-gradient(90deg, hsl(45,70%,35%), hsl(45,90%,62%))",
+                                  boxShadow: "0 0 8px hsla(45,80%,50%,0.5)"
+                                }}
+                              />
+                            </div>
+
+                            <p className="text-sm leading-relaxed mb-4" style={{ color: "hsl(45,30%,70%)" }}>
+                              {ideal.description}
+                            </p>
+
+                            {/* Атмосфера */}
+                            <div className="rounded-lg px-4 py-3 mb-4"
+                              style={{ background: "hsla(270,25%,7%,0.8)", border: "1px solid hsla(45,40%,18%,0.5)" }}>
+                              <p className="text-xs uppercase tracking-widest mb-1" style={{ color: "hsl(45,35%,42%)" }}>Атмосфера</p>
+                              <p className="text-sm italic" style={{ color: "hsl(45,40%,68%)" }}>"{ideal.vibe}"</p>
+                            </div>
+
+                            {/* Бейджи */}
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              {[
+                                { icon: ideal.climate === "тепло" ? "☀" : ideal.climate === "умеренно" ? "⛅" : "❄", label: ideal.climate },
+                                { icon: "💰", label: ideal.cost },
+                                { icon: "🌍", label: ideal.region },
+                                ...ideal.lifestyle.map(l => ({ icon: l === "мегаполис" ? "🏙" : l === "у моря" ? "🌊" : l === "в горах" ? "⛰" : "🌿", label: l }))
+                              ].map((b, i) => (
+                                <span key={i} className="text-xs px-3 py-1 rounded-full flex items-center gap-1"
+                                  style={{ background: "hsla(45,40%,14%,0.6)", color: "hsl(45,55%,62%)", border: "1px solid hsla(45,40%,25%,0.4)" }}>
+                                  {b.icon} {b.label}
+                                </span>
+                              ))}
+                            </div>
+
+                            <p className="text-xs" style={{ color: "hsl(45,30%,42%)" }}>
+                              Нажмите, чтобы увидеть все подходящие города →
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
                 {/* Кнопки */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   <button
                     onClick={() => setActiveSection("cities")}
                     className="mystic-btn flex-1 py-3 rounded-xl text-xs"
                   >
-                    🌍 Мой город для переезда
+                    🌍 Все города для переезда
                   </button>
                   <button
                     onClick={() => setActiveSection("analysis")}
