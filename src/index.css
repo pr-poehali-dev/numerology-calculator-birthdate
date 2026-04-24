@@ -4,89 +4,40 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 240 20% 4%;
+    --foreground: 45 60% 88%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 240 18% 7%;
+    --card-foreground: 45 60% 88%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 240 18% 7%;
+    --popover-foreground: 45 60% 88%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 45 80% 58%;
+    --primary-foreground: 240 20% 6%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 240 15% 12%;
+    --secondary-foreground: 45 60% 88%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 240 15% 12%;
+    --muted-foreground: 240 10% 55%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 45 80% 58%;
+    --accent-foreground: 240 20% 6%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 45 60% 88%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 45 30% 20%;
+    --input: 240 15% 12%;
+    --ring: 45 80% 58%;
+
+    --radius: 0.75rem;
+
+    --gold: 45 80% 58%;
+    --gold-dim: 45 50% 35%;
+    --deep: 240 20% 4%;
+    --mystic: 270 30% 12%;
   }
 }
 
@@ -97,5 +48,436 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: "Montserrat", sans-serif;
+    background-color: hsl(240, 20%, 4%);
+    color: hsl(45, 60%, 88%);
   }
+}
+
+/* Звёздный фон */
+.stars-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      ellipse at 20% 20%,
+      hsla(270, 40%, 15%, 0.6) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 80%,
+      hsla(240, 40%, 10%, 0.8) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 50% 0%,
+      hsla(45, 60%, 15%, 0.3) 0%,
+      transparent 50%
+    ),
+    hsl(240, 20%, 4%);
+}
+
+.stars-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(
+      1px 1px at 10% 15%,
+      hsla(45, 80%, 70%, 0.8) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 25% 40%,
+      hsla(45, 80%, 70%, 0.5) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 40% 10%,
+      hsla(45, 80%, 80%, 0.9) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 55% 60%,
+      hsla(45, 80%, 70%, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 70% 25%,
+      hsla(45, 80%, 70%, 0.7) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 85% 45%,
+      hsla(45, 80%, 80%, 0.6) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 15% 70%,
+      hsla(45, 80%, 70%, 0.5) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 30% 85%,
+      hsla(45, 80%, 70%, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1.5px 1.5px at 60% 80%,
+      hsla(45, 80%, 80%, 0.7) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 90% 70%,
+      hsla(45, 80%, 70%, 0.5) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 5% 50%,
+      hsla(200, 80%, 80%, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 45% 30%,
+      hsla(200, 80%, 80%, 0.3) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 75% 55%,
+      hsla(200, 80%, 80%, 0.4) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 20% 92%,
+      hsla(45, 80%, 70%, 0.3) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      1px 1px at 95% 15%,
+      hsla(45, 80%, 70%, 0.6) 0%,
+      transparent 100%
+    );
+}
+
+/* Золотой текст */
+.gold-text {
+  color: hsl(45, 80%, 58%);
+}
+
+.gold-gradient {
+  background: linear-gradient(
+    135deg,
+    hsl(45, 80%, 65%) 0%,
+    hsl(38, 90%, 50%) 50%,
+    hsl(45, 80%, 65%) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Сакральные карточки */
+.mystic-card {
+  background: linear-gradient(
+    135deg,
+    hsla(240, 18%, 8%, 0.95) 0%,
+    hsla(270, 20%, 10%, 0.95) 100%
+  );
+  border: 1px solid hsla(45, 60%, 40%, 0.3);
+  box-shadow:
+    0 0 30px hsla(45, 80%, 20%, 0.15),
+    inset 0 1px 0 hsla(45, 80%, 60%, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mystic-card:hover {
+  border-color: hsla(45, 60%, 50%, 0.5);
+  box-shadow:
+    0 0 50px hsla(45, 80%, 25%, 0.3),
+    inset 0 1px 0 hsla(45, 80%, 60%, 0.15);
+  transition: all 0.4s ease;
+}
+
+/* Золотой разделитель */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(45, 80%, 45%) 30%,
+    hsl(45, 90%, 60%) 50%,
+    hsl(45, 80%, 45%) 70%,
+    transparent 100%
+  );
+}
+
+/* Кнопка */
+.mystic-btn {
+  background: linear-gradient(
+    135deg,
+    hsl(45, 80%, 42%) 0%,
+    hsl(38, 85%, 35%) 50%,
+    hsl(45, 80%, 42%) 100%
+  );
+  color: hsl(240, 20%, 6%);
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid hsl(45, 80%, 55%);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.mystic-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    hsla(45, 80%, 80%, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.mystic-btn:hover::before {
+  left: 100%;
+}
+
+.mystic-btn:hover {
+  box-shadow:
+    0 0 30px hsla(45, 80%, 50%, 0.4),
+    0 0 60px hsla(45, 80%, 30%, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Input */
+.mystic-input {
+  background: hsla(240, 20%, 8%, 0.9);
+  border: 1px solid hsla(45, 60%, 30%, 0.5);
+  color: hsl(45, 60%, 88%);
+  font-family: "Montserrat", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.mystic-input:focus {
+  border-color: hsl(45, 80%, 55%);
+  box-shadow: 0 0 20px hsla(45, 80%, 40%, 0.3);
+  outline: none;
+}
+
+/* Число аркана */
+.arcane-number {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 300;
+  color: hsl(45, 80%, 58%);
+  text-shadow: 0 0 20px hsla(45, 80%, 50%, 0.5);
+}
+
+/* Навигация */
+.nav-item {
+  font-family: "Montserrat", sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: hsl(45, 40%, 55%);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  position: relative;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  color: hsl(45, 80%, 65%);
+}
+
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: hsl(45, 80%, 58%);
+  box-shadow: 0 0 8px hsl(45, 80%, 58%);
+}
+
+/* Сакральный символ */
+.sacred-symbol {
+  font-size: 4rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 15px hsla(45, 80%, 50%, 0.5));
+}
+
+/* Анимации */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsla(45, 80%, 40%, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 40px hsla(45, 80%, 50%, 0.6),
+      0 0 80px hsla(45, 80%, 30%, 0.3);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 30s linear infinite;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Декоративные углы */
+.corner-decoration {
+  position: relative;
+}
+
+.corner-decoration::before,
+.corner-decoration::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: hsla(45, 80%, 45%, 0.6);
+  border-style: solid;
+}
+
+.corner-decoration::before {
+  top: 8px;
+  left: 8px;
+  border-width: 1px 0 0 1px;
+}
+
+.corner-decoration::after {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Арканы блок */
+.arcane-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    hsla(45, 80%, 20%, 0.8),
+    hsla(270, 30%, 15%, 0.8)
+  );
+  border: 1px solid hsla(45, 70%, 40%, 0.5);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: hsl(45, 80%, 65%);
+  flex-shrink: 0;
+}
+
+/* Plus/Minus badges */
+.plus-badge {
+  background: linear-gradient(
+    135deg,
+    hsla(120, 50%, 20%, 0.8),
+    hsla(150, 40%, 15%, 0.8)
+  );
+  border: 1px solid hsla(120, 60%, 35%, 0.5);
+  color: hsl(120, 60%, 65%);
+}
+
+.minus-badge {
+  background: linear-gradient(
+    135deg,
+    hsla(0, 50%, 20%, 0.8),
+    hsla(330, 40%, 15%, 0.8)
+  );
+  border: 1px solid hsla(0, 60%, 35%, 0.5);
+  color: hsl(0, 60%, 65%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(240, 20%, 6%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(45, 50%, 30%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(45, 70%, 45%);
+}
+
+/* Section transition */
+.section-enter {
+  animation: fadeInUp 0.5s ease forwards;
 }
