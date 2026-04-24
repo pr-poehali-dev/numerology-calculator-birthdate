@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { calculate, getArcane, ARCANES, type NumerologyResult } from "@/data/numerology";
+import { getCitiesForNumber, getCompatibilityScore, getCompatibilityLabel, type CityData } from "@/data/cities";
 
-type Section = "calculator" | "arcanes" | "analysis" | "results" | "method";
+type Section = "calculator" | "arcanes" | "analysis" | "results" | "method" | "cities";
 
 export default function Index() {
   const [activeSection, setActiveSection] = useState<Section>("calculator");
@@ -11,6 +12,7 @@ export default function Index() {
   const [result, setResult] = useState<NumerologyResult | null>(null);
   const [error, setError] = useState("");
   const [selectedArcane, setSelectedArcane] = useState<number | null>(null);
+  const [expandedCity, setExpandedCity] = useState<string | null>(null);
 
   function handleCalculate() {
     const d = parseInt(day), m = parseInt(month), y = parseInt(year);
@@ -21,14 +23,16 @@ export default function Index() {
     setError("");
     const res = calculate(d, m, y);
     setResult(res);
+    setExpandedCity(null);
     setActiveSection("results");
   }
 
   const navItems: { id: Section; label: string }[] = [
     { id: "calculator", label: "Калькулятор" },
-    { id: "arcanes", label: "Арканы" },
-    { id: "analysis", label: "Анализ" },
     { id: "results", label: "Результаты" },
+    { id: "cities", label: "Города" },
+    { id: "analysis", label: "Анализ" },
+    { id: "arcanes", label: "Арканы" },
     { id: "method", label: "Методика" },
   ];
 
@@ -223,13 +227,13 @@ export default function Index() {
                 {/* Кнопки */}
                 <div className="flex flex-col sm:flex-row gap-3 mt-6">
                   <button
-                    onClick={() => setActiveSection("analysis")}
+                    onClick={() => setActiveSection("cities")}
                     className="mystic-btn flex-1 py-3 rounded-xl text-xs"
                   >
-                    ✦ Анализ личности
+                    🌍 Мой город для переезда
                   </button>
                   <button
-                    onClick={() => { setResult(null); setDay(""); setMonth(""); setYear(""); setActiveSection("calculator"); }}
+                    onClick={() => setActiveSection("analysis")}
                     className="flex-1 py-3 rounded-xl text-xs uppercase tracking-widest font-semibold"
                     style={{
                       background: "hsla(240,20%,10%,0.8)",
@@ -237,9 +241,16 @@ export default function Index() {
                       color: "hsl(45,60%,60%)"
                     }}
                   >
-                    ↺ Новый расчёт
+                    ✦ Анализ личности
                   </button>
                 </div>
+                <button
+                  onClick={() => { setResult(null); setDay(""); setMonth(""); setYear(""); setActiveSection("calculator"); }}
+                  className="w-full mt-3 py-2 text-xs uppercase tracking-widest"
+                  style={{ color: "hsl(45,30%,40%)" }}
+                >
+                  ↺ Новый расчёт
+                </button>
               </div>
             )}
           </div>
@@ -429,6 +440,153 @@ export default function Index() {
                 })()}
               </div>
             )}
+          </div>
+        )}
+
+        {/* ГОРОДА */}
+        {activeSection === "cities" && (
+          <div className="section-enter">
+            {!result ? (
+              <div className="text-center py-20">
+                <div className="text-5xl mb-4">🌍</div>
+                <p className="gold-text font-cormorant text-xl">Сначала введите дату рождения</p>
+                <p className="text-sm mt-2 mb-6" style={{ color: "hsl(45,30%,50%)" }}>
+                  Чтобы найти ваш город, нужно рассчитать число жизненного пути
+                </p>
+                <button onClick={() => setActiveSection("calculator")} className="mystic-btn mt-2 px-8 py-3 rounded-xl text-xs">
+                  К калькулятору
+                </button>
+              </div>
+            ) : (() => {
+              const cities = getCitiesForNumber(result.lifePathNumber);
+              const expanded = expandedCity ?? cities[0]?.name ?? null;
+              return (
+                <div>
+                  <h2 className="font-cormorant text-4xl font-light gold-text text-center mb-2">
+                    Ваши города для переезда
+                  </h2>
+                  <p className="text-center text-sm mb-2" style={{ color: "hsl(45,30%,55%)" }}>
+                    Подобраны по вибрации числа жизненного пути:{" "}
+                    <span className="gold-text font-semibold">{result.lifePathNumber}</span>
+                  </p>
+                  <p className="text-center text-xs mb-8 tracking-wide" style={{ color: "hsl(45,25%,45%)" }}>
+                    Нажмите на город, чтобы узнать подробнее
+                  </p>
+
+                  <div className="grid gap-4">
+                    {cities.map((city, idx) => {
+                      const score = getCompatibilityScore(city.number, result.lifePathNumber);
+                      const isOpen = expanded === city.name;
+                      return (
+                        <div
+                          key={city.name}
+                          className="mystic-card rounded-xl overflow-hidden cursor-pointer transition-all"
+                          style={isOpen ? { borderColor: "hsl(45,80%,55%)", boxShadow: "0 0 30px hsla(45,80%,30%,0.4)" } : {}}
+                          onClick={() => setExpandedCity(isOpen ? null : city.name)}
+                        >
+                          {/* Шапка карточки */}
+                          <div className="flex items-center gap-4 p-5">
+                            {/* Номер */}
+                            <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-xs font-bold"
+                              style={{ background: "hsla(45,50%,20%,0.5)", color: "hsl(45,70%,60%)", border: "1px solid hsla(45,50%,35%,0.4)" }}>
+                              {idx + 1}
+                            </div>
+
+                            {/* Флаг + название */}
+                            <div className="text-3xl flex-shrink-0">{city.flag}</div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-1">
+                                <span className="font-cormorant text-2xl gold-text">{city.name}</span>
+                                <span className="text-xs" style={{ color: "hsl(45,30%,50%)" }}>{city.country}</span>
+                              </div>
+                              <div className="text-xs" style={{ color: "hsl(45,40%,55%)" }}>{city.energy}</div>
+                            </div>
+
+                            {/* Совместимость */}
+                            <div className="flex-shrink-0 text-right">
+                              <div className="arcane-number text-2xl leading-none">{score}%</div>
+                              <div className="text-xs mt-1" style={{ color: "hsl(45,30%,50%)" }}>
+                                {score >= 85 ? "✦✦✦" : score >= 70 ? "✦✦" : "✦"}
+                              </div>
+                            </div>
+
+                            <div className="text-sm ml-1 flex-shrink-0" style={{ color: "hsl(45,40%,50%)" }}>
+                              {isOpen ? "▲" : "▼"}
+                            </div>
+                          </div>
+
+                          {/* Полоса совместимости */}
+                          <div className="px-5 pb-3" style={{ marginTop: -8 }}>
+                            <div className="h-0.5 rounded-full overflow-hidden" style={{ background: "hsla(45,30%,20%,0.5)" }}>
+                              <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{
+                                  width: `${score}%`,
+                                  background: score >= 85
+                                    ? "linear-gradient(90deg, hsl(45,80%,45%), hsl(45,90%,65%))"
+                                    : "linear-gradient(90deg, hsl(45,60%,35%), hsl(45,70%,55%))"
+                                }}
+                              />
+                            </div>
+                            <div className="text-xs mt-1" style={{ color: "hsl(45,30%,45%)" }}>
+                              {getCompatibilityLabel(score)}
+                            </div>
+                          </div>
+
+                          {/* Раскрытое содержимое */}
+                          {isOpen && (
+                            <div className="px-5 pb-6 border-t" style={{ borderColor: "hsla(45,40%,20%,0.3)" }}>
+                              {/* Описание */}
+                              <p className="text-sm leading-relaxed my-4" style={{ color: "hsl(45,35%,72%)" }}>
+                                {city.description}
+                              </p>
+
+                              {/* Вайб */}
+                              <div className="rounded-lg p-4 mb-4" style={{ background: "hsla(270,25%,8%,0.7)", border: "1px solid hsla(45,40%,20%,0.4)" }}>
+                                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: "hsl(45,40%,45%)" }}>Атмосфера</p>
+                                <p className="text-sm italic" style={{ color: "hsl(45,40%,70%)" }}>"{city.vibe}"</p>
+                              </div>
+
+                              {/* Кому подходит */}
+                              <div className="mb-4">
+                                <p className="text-xs uppercase tracking-widest mb-2" style={{ color: "hsl(45,40%,45%)" }}>Идеально для</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {city.ideal.map(i => (
+                                    <span key={i} className="text-xs px-3 py-1 rounded-full"
+                                      style={{ background: "hsla(45,50%,18%,0.5)", color: "hsl(45,65%,65%)", border: "1px solid hsla(45,50%,28%,0.4)" }}>
+                                      {i}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Теги */}
+                              <div className="flex flex-wrap gap-2">
+                                {city.tags.map(tag => (
+                                  <span key={tag} className="text-xs px-2 py-0.5 rounded"
+                                    style={{ background: "hsla(240,20%,12%,0.8)", color: "hsl(45,30%,50%)", border: "1px solid hsla(45,20%,25%,0.3)" }}>
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Примечание */}
+                  <div className="mt-8 text-center">
+                    <div className="gold-divider max-w-xs mx-auto mb-4" />
+                    <p className="text-xs leading-relaxed" style={{ color: "hsl(45,25%,45%)" }}>
+                      Подбор городов основан на нумерологической совместимости вибраций.<br />
+                      Число города рассчитывается по энергетике его имени и исторической миссии.
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
