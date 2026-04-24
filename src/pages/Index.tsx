@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { calculate, getArcane, ARCANES, type NumerologyResult } from "@/data/numerology";
-import { getCitiesForNumber, getCompatibilityScore, getCompatibilityLabel, type CityData } from "@/data/cities";
+import { getCitiesForNumber, filterCities, getCompatibilityScore, getCompatibilityLabel, type Climate, type Lifestyle, type Region, type Cost } from "@/data/cities";
 
 type Section = "calculator" | "arcanes" | "analysis" | "results" | "method" | "cities";
 
@@ -13,6 +13,10 @@ export default function Index() {
   const [error, setError] = useState("");
   const [selectedArcane, setSelectedArcane] = useState<number | null>(null);
   const [expandedCity, setExpandedCity] = useState<string | null>(null);
+  const [filterClimate, setFilterClimate] = useState<Climate | null>(null);
+  const [filterLifestyle, setFilterLifestyle] = useState<Lifestyle | null>(null);
+  const [filterRegion, setFilterRegion] = useState<Region | null>(null);
+  const [filterCost, setFilterCost] = useState<Cost | null>(null);
 
   function handleCalculate() {
     const d = parseInt(day), m = parseInt(month), y = parseInt(year);
@@ -458,21 +462,115 @@ export default function Index() {
                 </button>
               </div>
             ) : (() => {
-              const cities = getCitiesForNumber(result.lifePathNumber);
+              const allCities = getCitiesForNumber(result.lifePathNumber);
+              const cities = filterCities(allCities, filterClimate, filterLifestyle, filterRegion, filterCost);
               const expanded = expandedCity ?? cities[0]?.name ?? null;
+
+              const FilterBtn = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
+                <button
+                  onClick={onClick}
+                  className="text-xs px-3 py-1.5 rounded-full transition-all"
+                  style={active ? {
+                    background: "linear-gradient(135deg, hsl(45,80%,35%), hsl(45,70%,28%))",
+                    color: "hsl(45,90%,85%)",
+                    border: "1px solid hsl(45,70%,50%)",
+                    boxShadow: "0 0 10px hsla(45,80%,40%,0.3)"
+                  } : {
+                    background: "hsla(240,20%,10%,0.6)",
+                    color: "hsl(45,30%,55%)",
+                    border: "1px solid hsla(45,30%,22%,0.5)"
+                  }}
+                >
+                  {label}
+                </button>
+              );
+
               return (
                 <div>
                   <h2 className="font-cormorant text-4xl font-light gold-text text-center mb-2">
                     Ваши города для переезда
                   </h2>
-                  <p className="text-center text-sm mb-2" style={{ color: "hsl(45,30%,55%)" }}>
+                  <p className="text-center text-sm mb-6" style={{ color: "hsl(45,30%,55%)" }}>
                     Подобраны по вибрации числа жизненного пути:{" "}
                     <span className="gold-text font-semibold">{result.lifePathNumber}</span>
                   </p>
-                  <p className="text-center text-xs mb-8 tracking-wide" style={{ color: "hsl(45,25%,45%)" }}>
-                    Нажмите на город, чтобы узнать подробнее
-                  </p>
 
+                  {/* ФИЛЬТРЫ */}
+                  <div className="mystic-card rounded-xl p-5 mb-6">
+                    <p className="text-xs uppercase tracking-widest mb-4" style={{ color: "hsl(45,40%,45%)" }}>
+                      ✦ Фильтры
+                    </p>
+
+                    <div className="space-y-3">
+                      {/* Климат */}
+                      <div>
+                        <p className="text-xs mb-2" style={{ color: "hsl(45,30%,50%)" }}>🌡 Климат</p>
+                        <div className="flex flex-wrap gap-2">
+                          <FilterBtn label="Все" active={filterClimate === null} onClick={() => setFilterClimate(null)} />
+                          {(["тепло", "умеренно", "холодно"] as Climate[]).map(v => (
+                            <FilterBtn key={v} label={v === "тепло" ? "☀ Тепло" : v === "умеренно" ? "⛅ Умеренно" : "❄ Холодно"} active={filterClimate === v} onClick={() => setFilterClimate(filterClimate === v ? null : v)} />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Образ жизни */}
+                      <div>
+                        <p className="text-xs mb-2" style={{ color: "hsl(45,30%,50%)" }}>🏙 Образ жизни</p>
+                        <div className="flex flex-wrap gap-2">
+                          <FilterBtn label="Все" active={filterLifestyle === null} onClick={() => setFilterLifestyle(null)} />
+                          {(["мегаполис", "у моря", "в горах", "спокойный"] as Lifestyle[]).map(v => (
+                            <FilterBtn key={v} label={v === "мегаполис" ? "🏙 Мегаполис" : v === "у моря" ? "🌊 У моря" : v === "в горах" ? "⛰ В горах" : "🌿 Спокойный"} active={filterLifestyle === v} onClick={() => setFilterLifestyle(filterLifestyle === v ? null : v)} />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Регион */}
+                      <div>
+                        <p className="text-xs mb-2" style={{ color: "hsl(45,30%,50%)" }}>🌍 Регион</p>
+                        <div className="flex flex-wrap gap-2">
+                          <FilterBtn label="Все" active={filterRegion === null} onClick={() => setFilterRegion(null)} />
+                          {(["Европа", "Азия", "Америка", "Ближний Восток", "СНГ"] as Region[]).map(v => (
+                            <FilterBtn key={v} label={v} active={filterRegion === v} onClick={() => setFilterRegion(filterRegion === v ? null : v)} />
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Стоимость жизни */}
+                      <div>
+                        <p className="text-xs mb-2" style={{ color: "hsl(45,30%,50%)" }}>💰 Стоимость жизни</p>
+                        <div className="flex flex-wrap gap-2">
+                          <FilterBtn label="Все" active={filterCost === null} onClick={() => setFilterCost(null)} />
+                          {(["дёшево", "средне", "дорого"] as Cost[]).map(v => (
+                            <FilterBtn key={v} label={v === "дёшево" ? "💚 Дёшево" : v === "средне" ? "💛 Средне" : "💎 Дорого"} active={filterCost === v} onClick={() => setFilterCost(filterCost === v ? null : v)} />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Сброс */}
+                    {(filterClimate || filterLifestyle || filterRegion || filterCost) && (
+                      <button
+                        onClick={() => { setFilterClimate(null); setFilterLifestyle(null); setFilterRegion(null); setFilterCost(null); }}
+                        className="mt-4 text-xs uppercase tracking-widest"
+                        style={{ color: "hsl(45,40%,45%)" }}
+                      >
+                        ↺ Сбросить фильтры
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Результат фильтрации */}
+                  {cities.length === 0 ? (
+                    <div className="text-center py-12">
+                      <div className="text-4xl mb-3">🔍</div>
+                      <p className="font-cormorant text-xl gold-text mb-2">Ни один город не найден</p>
+                      <p className="text-sm" style={{ color: "hsl(45,30%,50%)" }}>Попробуйте изменить фильтры</p>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-xs mb-4 text-center" style={{ color: "hsl(45,25%,45%)" }}>
+                        Найдено {cities.length} {cities.length === 1 ? "город" : cities.length < 5 ? "города" : "городов"} · нажмите, чтобы узнать подробнее
+                      </p>
                   <div className="grid gap-4">
                     {cities.map((city, idx) => {
                       const score = getCompatibilityScore(city.number, result.lifePathNumber);
@@ -584,6 +682,8 @@ export default function Index() {
                       Число города рассчитывается по энергетике его имени и исторической миссии.
                     </p>
                   </div>
+                    </>
+                  )}
                 </div>
               );
             })()}
