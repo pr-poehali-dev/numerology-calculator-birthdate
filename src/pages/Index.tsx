@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { calculate, getArcane, ARCANES, type NumerologyResult } from "@/data/numerology";
 import { getCitiesForNumber, filterCities, getCompatibilityScore, getCompatibilityLabel, type Climate, type Lifestyle, type Region, type Cost, CITIES } from "@/data/cities";
+import { getMessage } from "@/data/messages";
 
 type Section = "calculator" | "arcanes" | "analysis" | "results" | "method" | "cities";
 
@@ -234,6 +235,7 @@ export default function Index() {
                     ?? getCitiesForNumber(result.lifePathNumber)[0];
                   if (!ideal) return null;
                   const score = getCompatibilityScore(ideal.number, result.lifePathNumber);
+                  const message = getMessage(result.lifePathNumber, ideal.name);
                   return (
                     <div
                       className="mystic-card rounded-2xl overflow-hidden mt-6 cursor-pointer"
@@ -267,7 +269,7 @@ export default function Index() {
                             <p className="text-xs mb-3" style={{ color: "hsl(45,50%,55%)" }}>{ideal.energy}</p>
 
                             {/* Полоса совместимости */}
-                            <div className="h-0.5 rounded-full overflow-hidden mb-4" style={{ background: "hsla(45,30%,15%,0.8)" }}>
+                            <div className="h-0.5 rounded-full overflow-hidden mb-5" style={{ background: "hsla(45,30%,15%,0.8)" }}>
                               <div
                                 className="h-full rounded-full"
                                 style={{
@@ -278,9 +280,28 @@ export default function Index() {
                               />
                             </div>
 
-                            <p className="text-sm leading-relaxed mb-4" style={{ color: "hsl(45,30%,70%)" }}>
-                              {ideal.description}
-                            </p>
+                            {/* Персональное послание */}
+                            <div className="rounded-xl p-5 mb-5 relative overflow-hidden"
+                              style={{
+                                background: "linear-gradient(135deg, hsla(270,30%,8%,0.95), hsla(240,25%,6%,0.95))",
+                                border: "1px solid hsla(45,60%,35%,0.4)",
+                                boxShadow: "inset 0 0 30px hsla(45,50%,10%,0.5)"
+                              }}>
+                              {/* Декоративный уголок */}
+                              <div className="absolute top-3 left-3 w-4 h-4"
+                                style={{ borderTop: "1px solid hsla(45,70%,45%,0.5)", borderLeft: "1px solid hsla(45,70%,45%,0.5)" }} />
+                              <div className="absolute bottom-3 right-3 w-4 h-4"
+                                style={{ borderBottom: "1px solid hsla(45,70%,45%,0.5)", borderRight: "1px solid hsla(45,70%,45%,0.5)" }} />
+
+                              <p className="text-xs uppercase tracking-[0.3em] mb-3 flex items-center gap-2"
+                                style={{ color: "hsl(45,60%,45%)" }}>
+                                <span>✦</span> Послание звёзд
+                              </p>
+                              <p className="text-sm leading-relaxed font-cormorant text-base italic"
+                                style={{ color: "hsl(45,50%,80%)", fontStyle: "italic", lineHeight: "1.8" }}>
+                                {message}
+                              </p>
+                            </div>
 
                             {/* Атмосфера */}
                             <div className="rounded-lg px-4 py-3 mb-4"
